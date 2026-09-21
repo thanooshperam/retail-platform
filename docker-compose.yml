@@ -1,0 +1,24 @@
+services:
+
+  retail-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    image: retail-app:4.2.0
+
+    container_name: retail-app
+
+    ports:
+      - "8081:8081"
+
+    environment:
+      APP_VERSION: "4.2.0"
+      HEALTH_MODE: "healthy"
+
+    networks:
+      - retail-network
+
+networks:
+  retail-network:
+    driver: bridge
