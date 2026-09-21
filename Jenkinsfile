@@ -1,3 +1,4 @@
+```groovy
 pipeline {
 
     agent any
@@ -140,7 +141,7 @@ pipeline {
                         -p 8082:8081 ^
                         --network ${NETWORK_NAME} ^
                         -e APP_VERSION=${params.VERSION} ^
-                        -e HEALTH_MODE=healthy ^
+                        -e HEALTH_MODE=${params.VERSION == '4.2.2' ? 'fail' : 'healthy'} ^
                         ${IMAGE_NAME}:${params.VERSION}
                     """
 
@@ -330,3 +331,4 @@ pipeline {
         }
     }
 }
+```
