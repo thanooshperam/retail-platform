@@ -132,7 +132,7 @@ pipeline {
                     bat """
                         docker run -d ^
                         --name retail-app-new ^
-                        -p 8082:8081 ^
+                        -p 8081:8081 ^
                         --network ${NETWORK_NAME} ^
                         -e APP_VERSION=${params.VERSION} ^
                         -e HEALTH_MODE=healthy ^
