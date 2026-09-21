@@ -40,7 +40,8 @@ def version():
 @app.route("/payment")
 def payment():
     return jsonify({
-        "payment_status": "processing"
+        "payment_status": "fixed",
+        "payment_version": "4.2.1"
     })
 
 
