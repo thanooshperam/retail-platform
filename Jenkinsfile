@@ -226,10 +226,20 @@ pipeline {
                     """
 
                     bat """
-                        docker rename retail-app-new ${CONTAINER_NAME}
+                        docker rm -f retail-app-new 2>nul || exit /b 0
                     """
 
-                    echo "Production switched to ${params.VERSION}."
+                    bat """
+                        docker run -d ^
+                        --name ${CONTAINER_NAME} ^
+                        -p ${PORT}:${PORT} ^
+                        --network ${NETWORK_NAME} ^
+                        -e APP_VERSION=${params.VERSION} ^
+                        -e HEALTH_MODE=healthy ^
+                        ${IMAGE_NAME}:${params.VERSION}
+                    """
+
+                    echo "Production switched to ${params.VERSION} on port ${PORT}."
                 }
             }
         }
