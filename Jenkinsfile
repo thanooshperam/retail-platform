@@ -100,7 +100,7 @@ pipeline {
                     def previousImage = ""
 
                     bat """
-                        docker inspect ${CONTAINER_NAME} --format="{{.Config.Image}}" > previous-image.txt 2>nul
+                        docker inspect ${CONTAINER_NAME} --format="{{.Config.Image}}" > previous-image.txt 2>nul || exit /b 0
                     """
 
                     if (fileExists('previous-image.txt')) {
@@ -129,6 +129,10 @@ pipeline {
                 script {
 
                     echo "Starting new version ${params.VERSION}..."
+
+                    bat """
+                        docker rm -f retail-app-new 2>nul || exit /b 0
+                    """
 
                     bat """
                         docker run -d ^
