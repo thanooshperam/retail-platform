@@ -37,5 +37,13 @@ def version():
     })
 
 
+@app.route("/payment")
+def payment():
+    return jsonify({
+        "payment_status": "fixed",
+        "payment_version": "4.2.1"
+    })
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8081)
