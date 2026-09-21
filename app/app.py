@@ -30,10 +30,25 @@ def health():
     }), 200
 
 
+@app.route("/version")
+def version():
+    return jsonify({
+        "version": VERSION
+    })
+
+
 @app.route("/payment")
 def payment():
     return jsonify({
         "payment_status": "processing"
+    })
+
+
+@app.route("/store")
+def store():
+    return jsonify({
+        "store": "online",
+        "status": "active"
     })
 
 
