@@ -1,3 +1,4 @@
+```groovy
 pipeline {
 
     agent any
@@ -58,7 +59,6 @@ pipeline {
         stage('Checkout Code') {
             steps {
                 checkout scm
-
                 bat 'git rev-parse HEAD'
             }
         }
@@ -72,7 +72,6 @@ pipeline {
 
             steps {
                 bat "git show-ref --tags --verify --quiet refs/tags/v${params.VERSION}"
-
                 echo "Git tag v${params.VERSION} exists."
             }
         }
@@ -99,12 +98,15 @@ pipeline {
             steps {
                 script {
 
-                    def previousImage = bat(
-                        script: """
-                            docker inspect ${CONTAINER_NAME} --format="{{.Config.Image}}"
-                        """,
-                        returnStdout: true
-                    ).trim()
+                    def previousImage = ""
+
+                    bat """
+                        docker inspect ${CONTAINER_NAME} --format="{{.Config.Image}}" > previous-image.txt 2>nul
+                    """
+
+                    if (fileExists('previous-image.txt')) {
+                        previousImage = readFile('previous-image.txt').trim()
+                    }
 
                     if (previousImage == "") {
                         env.PREVIOUS_IMAGE = "${IMAGE_NAME}:4.2.1"
@@ -132,7 +134,7 @@ pipeline {
                     bat """
                         docker run -d ^
                         --name retail-app-new ^
-                        -p 8081:8081 ^
+                        -p 8082:8081 ^
                         --network ${NETWORK_NAME} ^
                         -e APP_VERSION=${params.VERSION} ^
                         -e HEALTH_MODE=healthy ^
@@ -311,8 +313,8 @@ pipeline {
 
         always {
             echo "Final Docker state:"
-
             bat "docker ps -a"
         }
     }
 }
+```
